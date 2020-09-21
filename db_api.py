@@ -17,7 +17,6 @@ class DBField:
 @dataclass_json
 @dataclass
 class SelectionCriteria:
-
     field_name: str
     operator: str
     value: Any

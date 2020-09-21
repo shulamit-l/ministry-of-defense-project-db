@@ -67,6 +67,7 @@ def test_reload_from_backup(backup_db: Path) -> None:
     delete_files(DB_ROOT)
     for path in backup_db.iterdir():
         (DB_ROOT / path.name).write_bytes(path.read_bytes())
+
     db = DataBase()
     assert db.num_tables() == 1
     assert db.get_tables_names() == ['Students']
@@ -111,16 +112,20 @@ def test_50_students(new_db: DataBase) -> None:
     assert students.count() == 50
     students.delete_record(1_000_001)
     students.delete_records([SelectionCriteria('ID', '=', 1_000_020)])
+
     students.delete_records([SelectionCriteria('ID', '<', 1_000_003)])
+
     students.delete_records([SelectionCriteria('ID', '>', 1_000_033)])
     students.delete_records([
         SelectionCriteria('ID', '>', 1_000_020),
         SelectionCriteria('ID', '<', 1_000_023)
     ])
+
     assert students.count() == 28
     students.update_record(1_000_009, dict(First='Jane', Last='Doe'))
     results = students.query_table([SelectionCriteria('First', '=', 'Jane')])
     assert len(results) == 1
+
     assert results[0]['First'] == 'Jane'
 
 
